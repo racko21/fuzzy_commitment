@@ -1,4 +1,4 @@
-import java.util.*;
+
 
 public class ecc_hamming {
 
@@ -8,10 +8,8 @@ public class ecc_hamming {
         String parityString = ecc.addParity(data);
         System.out.println("Data: " + data);
         System.out.println("Parity String: " + parityString);
-        System.out.println("Parity Bits: " + ecc.parityBits);
+        System.out.println("Decoded: " + ecc.decode(parityString));
     }
-
-    private final ArrayList<Integer> parityBits = new ArrayList<>();
     
     public String addParity(String data) {
         
@@ -41,7 +39,7 @@ public class ecc_hamming {
             }
         }
   
-
+        System.out.println("Parity String: " + parityString);
 
 
         /*
@@ -81,6 +79,74 @@ public class ecc_hamming {
         }
         
         return parityString.toString();
+
+        
     }
 
+    public String decode (String data) {
+        
+        StringBuilder parityString = new StringBuilder(data);
+        StringBuilder newParity = new StringBuilder();
+        int n = 0; //number of parity bits
+
+        //calc number of parity bits
+        int r = 0;
+        while (parityString.length() > Math.pow(2,r)-(r+1)) {
+            n++;
+            r++;
+        }
+
+        //calc parity bits
+        int parity = 0;
+        for(int k = 0; k < n; k++) {
+            for(int i = 0; i < parityString.length(); i++) {
+                String bin = "000"+ Integer.toBinaryString(i+1);
+                if(bin.charAt(bin.length()-1-k) == '1') {
+                    if(parityString.charAt(parityString.length()-1-i) == '1') {
+                        parity++;
+                    }
+                    
+                }        
+            }
+            if(parity % 2 == 0) {
+                newParity.append('0');
+            } else {
+                newParity.append('1');
+            } 
+
+            parity = 0;  
+            
+        }
+
+        // calc position of error
+        int errorPos = Integer.parseInt(newParity.toString(), 2);
+
+        //correct error
+        if(errorPos != 0) {
+            if(parityString.charAt(parityString.length()-errorPos) == '1') {
+                parityString.setCharAt(parityString.length()-errorPos, '0');
+            } else {
+                parityString.setCharAt(parityString.length()-errorPos, '1');
+            }
+        }
+
+        System.out.println("corrected parity string: " + parityString.toString());
+        
+        //remove parity bits
+        int paritypos = 0;
+        int index = (int) Math.pow(2, paritypos)-1;
+        while(index < parityString.length()) {
+            parityString.deleteCharAt(parityString.length()-1-index+paritypos);
+            paritypos++;
+            index = (int) Math.pow(2, paritypos)-1;
+        }
+
+        return parityString.toString();
+    }
+
+
+
+
+
+        
 }
