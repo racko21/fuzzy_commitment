@@ -3,12 +3,14 @@
 public class ecc_hamming {
 
     public static void main(String[] args) {
-        String data = "1011001";
+        String data = "10101000100";
         ecc_hamming ecc = new ecc_hamming();
         String parityString = ecc.addParity(data);
         System.out.println("Data: " + data);
         System.out.println("Parity String: " + parityString);
-        System.out.println("Decoded: " + ecc.decode(parityString));
+        String encoded = ecc.addParity(data);
+        System.out.println("Encoded: " + encoded);
+        System.out.println("Decoded: " + ecc.decode("101011010101011"));
     }
     
     public String addParity(String data) {
@@ -61,7 +63,7 @@ public class ecc_hamming {
         for(int k = 0; k < n; k++) {
             paritypos = (int) Math.pow(2, k);
             for(int i = 0; i < parityString.length(); i++) {
-                String bin = "000"+ Integer.toBinaryString(i+1);
+                String bin = toBinary( i+1, 16);
                 if(bin.charAt(bin.length()-1-k) == '1') {
                     if(parityString.charAt(parityString.length()-1-i) == '1') {
                         parity++;
@@ -70,9 +72,9 @@ public class ecc_hamming {
                 }        
             }
             if(parity % 2 == 0) {
-                parityString.setCharAt(parityString.length()-1-paritypos, '0');
+                parityString.setCharAt(parityString.length()-paritypos, '0');
             } else {
-                parityString.setCharAt(parityString.length()-1-paritypos, '1');
+                parityString.setCharAt(parityString.length()-paritypos, '1');
             } 
             parity = 0;  
             
@@ -100,7 +102,7 @@ public class ecc_hamming {
         int parity = 0;
         for(int k = 0; k < n; k++) {
             for(int i = 0; i < parityString.length(); i++) {
-                String bin = "000"+ Integer.toBinaryString(i+1);
+                String bin = toBinary( i+1, 16);
                 if(bin.charAt(bin.length()-1-k) == '1') {
                     if(parityString.charAt(parityString.length()-1-i) == '1') {
                         parity++;
@@ -143,7 +145,19 @@ public class ecc_hamming {
 
         return parityString.toString();
     }
-
+    
+    public static String toBinary(int x, int len)
+    {
+        StringBuilder result = new StringBuilder();
+ 
+        for (int i = len - 1; i >= 0 ; i--)
+        {
+            int mask = 1 << i;
+            result.append((x & mask) != 0 ? 1 : 0);
+        }
+ 
+        return result.toString();
+    }
 
 
 
