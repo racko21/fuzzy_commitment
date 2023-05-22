@@ -3,14 +3,27 @@
 public class ecc_hamming {
 
     public static void main(String[] args) {
-        String data = "10101000100";
+        
+        System.out.println("4/7 Hamming-Code");
+        String data = "0011";      
         ecc_hamming ecc = new ecc_hamming();
         String parityString = ecc.addParity(data);
         System.out.println("Data: " + data);
         System.out.println("Parity String: " + parityString);
-        String encoded = ecc.addParity(data);
-        System.out.println("Encoded: " + encoded);
-        System.out.println("Decoded: " + ecc.decode("101011010101011"));
+        System.out.println("Decoded: " + ecc.decode(parityString));
+
+        System.out.println();
+        System.out.println();
+
+        System.out.println("11/15 Hamming-Code");
+        String data2 = "10101000100";
+        ecc_hamming ecc2 = new ecc_hamming();
+        String parityString2 = ecc.addParity(data2);
+        System.out.println("Data: " + data2);
+        System.out.println("Parity String: " + parityString);
+        System.out.println("Decoded: " + ecc2.decode(parityString2));
+        
+
     }
     
     public String addParity(String data) {
@@ -40,22 +53,6 @@ public class ecc_hamming {
                 index--;
             }
         }
-  
-        System.out.println("Parity String: " + parityString);
-
-
-        /*
-         * k=0
-         * paritypos = 2^0 = 1
-         * i = 2
-         * bin = 0011
-         * 10101000100
-         * parity=1
-         * 
-         * 
-         */
-
-
 
         //calc parity bits
         int parity = 0;
@@ -131,8 +128,6 @@ public class ecc_hamming {
                 parityString.setCharAt(parityString.length()-errorPos, '1');
             }
         }
-
-        System.out.println("corrected parity string: " + parityString.toString());
         
         //remove parity bits
         int paritypos = 0;
