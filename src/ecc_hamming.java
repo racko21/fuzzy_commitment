@@ -3,25 +3,22 @@
 public class ecc_hamming {
 
     public static void main(String[] args) {
+       
         
+        //Test hamming code
+
         System.out.println("4/7 Hamming-Code");
         String data = "0011";      
         ecc_hamming ecc = new ecc_hamming();
         String parityString = ecc.addParity(data);
         System.out.println("Data: " + data);
         System.out.println("Parity String: " + parityString);
+        System.out.println("Error: 0011111");
         System.out.println("Decoded: " + ecc.decode(parityString));
+        System.out.println("Error-decoded:" + ecc.decode("0011111"));
+        
 
-        System.out.println();
-        System.out.println();
-
-        System.out.println("11/15 Hamming-Code");
-        String data2 = "10101000100";
-        ecc_hamming ecc2 = new ecc_hamming();
-        String parityString2 = ecc.addParity(data2);
-        System.out.println("Data: " + data2);
-        System.out.println("Parity String: " + parityString);
-        System.out.println("Decoded: " + ecc2.decode(parityString2));
+    
         
 
     }
@@ -89,12 +86,12 @@ public class ecc_hamming {
         int n = 0; //number of parity bits
 
         //calc number of parity bits
-        int r = 0;
+        int r = 1;
         while (parityString.length() > Math.pow(2,r)-(r+1)) {
             n++;
             r++;
-        }
-
+        }    
+        
         //calc parity bits
         int parity = 0;
         for(int k = 0; k < n; k++) {

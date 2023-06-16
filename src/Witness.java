@@ -1,18 +1,32 @@
 import java.util.Random;
+ 
 
 public class Witness {
+
+    //Chance für Bitflip ist 25 * Flip
+    int flip = 4;
+
 
     public String[][] BiometricPair (int n, int length){
         String[][] biometricPair = new String[n][2];
         for (int i = 0; i < n; i++) {
             biometricPair[i][0] = BitString(length);
-            biometricPair[i][1] = fuzzyString(biometricPair[i][0], 0);
+            biometricPair[i][1] = bitFlip(biometricPair[i][0]);
         }
         return biometricPair;
     }
 
 
     
+   
+   
+   
+   
+   
+   
+   
+   
+   
     public String BitString (int length) {
         StringBuilder bitString = new StringBuilder();
         for (int i = 0; i < length; i++) {
@@ -25,18 +39,30 @@ public class Witness {
         }
         return bitString.toString();
     }
-
-    public String fuzzyString (String bitString, double prob){
-        Random rand = new Random();
-        StringBuilder fuzzyString = new StringBuilder();
-        for (int i = 0; i < bitString.length(); i++) {
-            if(rand.nextDouble()< prob){
-                fuzzyString.append(bitString.charAt(i) == '0' ? '1' : '0');
-            }
-            else{
-                fuzzyString.append(bitString.charAt(i));
-            }
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+    
+    public String bitFlip (String bitsString){
+        StringBuilder String = new StringBuilder(bitsString);
+        if (flip >=4) flip = 100;
+        for(int i = 0; i < flip; i++){
+            Random rand = new Random();
+            int index = rand.nextInt(String.length());
+            String.setCharAt(index, String.charAt(index) == '0' ? '1' : '0');
+            
         }
-        return fuzzyString.toString();
+        return String.toString();
     }
-} 
+  
+}
+

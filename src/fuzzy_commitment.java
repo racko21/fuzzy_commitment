@@ -5,10 +5,12 @@ import java.security.NoSuchAlgorithmException;
 
 
 public class fuzzy_commitment{
-    
+
 
     private final ArrayList<ArrayList<String>> commitment;
     private final ecc_hamming ecc;
+    public int fail = 0;
+    public int succ = 0;
 
     public fuzzy_commitment(){
         commitment = new ArrayList<ArrayList<String>>();
@@ -22,7 +24,7 @@ public class fuzzy_commitment{
         
         //generate codeword and hash
         key_gen keyGen = new key_gen();
-        codeword = new StringBuilder(keyGen.BitString(1000));
+        codeword = new StringBuilder(keyGen.BitString(572));
         String hash = SHA256(codeword.toString());
 
         //add parity bits
@@ -46,6 +48,8 @@ public class fuzzy_commitment{
             String hash = f.get(0);
             String delta = f.get(1);
 
+            
+
             //generate codeword
             xor = new StringBuilder(xorStrings(delta, data));
 
@@ -53,16 +57,18 @@ public class fuzzy_commitment{
             for(int i = 0; i < xor.length(); i+=7){
                 codeword.append(ecc.decode(xor.substring(i,i+7)));
             }
-            
+
             //generate hash
             String hash2 = SHA256(codeword.toString());
 
             if(hash.equals(hash2)){
                 System.out.println("Decommitment successful");
+                succ++;
                 return;
             }
         }
         System.out.println("Decommitment failed");
+        fail++;
         
     }
         
@@ -71,7 +77,7 @@ public class fuzzy_commitment{
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] hash = digest.digest(data.getBytes(StandardCharsets.UTF_8));
 
-        return hash.toString();
+        return new String(hash);
     }
 
     public String xorStrings(String inputData, String key){
